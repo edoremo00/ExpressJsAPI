@@ -10,7 +10,7 @@ class gameDto{
             this.genere=genere;
             this.datapubblicazione=datapubblicazione;
             this.Sviluppatore=Sviluppatore;
-            this.Prezzo=Prezzo
+            this.Prezzo=Prezzo;
         }
 
 }

@@ -28,7 +28,7 @@ router.get('/getallgames',async(req,res)=>{
 router.get('/getgamebyid/:id',custommiddleware.getsingleGamemiddleware,async(req,res)=>{
     try{
         let gametofind=await res.game
-        if(gametofind.deleted===true) return res.status(404).json({message:`Gioco con id ${req.params.id} non trovato`})
+        if(gametofind==null||gametofind.deleted===true) return res.status(404).json({message:`Gioco con id ${req.params.id} non trovato`})
         return res.status(200).json(mapper.MapGametoGameDTO(gametofind))
     }
     catch(error){
@@ -59,9 +59,15 @@ router.post('/creategame',async(req,res)=>{
         genere:req.body.genere,
         datapubblicazione:req.body.datapubblicazione,
         Sviluppatore:req.body.Sviluppatore,
-        Prezzo:req.body.Prezzo
+        Prezzo:req.body.Prezzo,
+        piattaforma:req.body.piattaforma
     })
+    //check di avere nel body almeno i campi obbligatori
+    if(Object.keys(req.body).length<3) return res.status(400).json({message:"Oggetto passato nel body non completo"})
     try{
+        //VERIFICO CHE GIOCO NON SIA GIà IN CATALOGO
+        let check=await gamemodel.findOne({titolo:{$eq:gioco.titolo},piattaforma:{$eq:gioco.piattaforma},Sviluppatore:{$eq:gioco.Sviluppatore},deleted:false})
+        if(check) return res.status(400).json({message:"Gioco già in catalogo"})
       const gametosave=  await gioco.save()
       let gamemapped=mapper.MapGametoGameDTO(gametosave)
       return res.status(201).json(gamemapped)

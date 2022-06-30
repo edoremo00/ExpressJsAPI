@@ -1,5 +1,6 @@
 const express=require('express')
 const gamemodel=require('../models/game.js')
+const usermodel=require('../models/user.js')
 const mongoose=require('mongoose')
 
 
@@ -9,7 +10,7 @@ async function getsingleGamemiddleware(req,res,next){
     let gametofind
     try{
         if(!mongoose.isValidObjectId(req.params.id)) return res.status(400).json({message:"id in formato non valido"})
-        gametofind=gamemodel.findById(req.params.id)
+        gametofind=await gamemodel.findById(req.params.id)
         if(gametofind==null){
             return res.status(404).json({message:`Gioco con id ${req.params.id} non trovato`})
         }
@@ -19,6 +20,21 @@ async function getsingleGamemiddleware(req,res,next){
     res.game=gametofind//ritorno la risposta al metodo che ha invocato il middleware
     next()//continuo la richiesta che ha invocato il middleware
     
+}
+
+async function Getsingleuser(req,res,next){
+    let usertofind;
+    try {
+        if(!mongoose.isValidObjectId(req.params.userid)) return res.status(400).json({message:"id in formato non valido"})
+        usertofind=await usermodel.findById(req.params.userid)
+        if(usertofind==null){
+            return res.status(404).json({message:`Utente con id ${req.params.userid} non trovato`})
+        }
+    } catch (error) {
+        return res.status(500).json({message:error.message})
+    }
+    res.user=usertofind
+    next()
 }
 
 //#region TEST MIDDLEWARE CON PARAMETRI
@@ -68,4 +84,5 @@ const getsingleGamemiddlewarewithparams=(finddeleted)=>{
 //#endregion
 module.exports.getsingleGamemiddlewarewithparams=getsingleGamemiddlewarewithparams
 module.exports.getsingleGamemiddleware=getsingleGamemiddleware
+module.exports.Getsingleuser=Getsingleuser
 

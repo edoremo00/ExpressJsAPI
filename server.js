@@ -24,6 +24,8 @@ app.use(cors({
 
 
 const games=require('./routes/games')//definisco le route in un altro file e le importo. ho definito quindi un middleware
+const users=require('./routes/users.js')
 app.use('/games',games)
+app.use('/users',users)
 app.listen(3000,()=>console.log("server in esecuzione"))
 

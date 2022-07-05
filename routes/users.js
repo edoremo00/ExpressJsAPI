@@ -28,9 +28,9 @@ router.patch('/addgamestouser/:userid',custommiddleware.Getsingleuser,async(req,
         }
         if(Object.keys(req.body).length<2) return res.status(400).json({message:`l'oggetto deve essere così composto {titolo:String,piattaforma:String}`})
        
-        let usertoaddgame=await res.user
+        const usertoaddgame=await res.user
         if(usertoaddgame.deleted) return res.status(404).json({message:`Utente con id ${req.params.userid} non trovato`})
-        let gametoadd=await gamemodel.findOne({titolo:gametoaddinfo.titolo,piattaforma:gametoaddinfo.piattaforma})
+        const gametoadd=await gamemodel.findOne({titolo:gametoaddinfo.titolo,piattaforma:gametoaddinfo.piattaforma})
         if(gametoadd==null) return res.status(404).json({message:"il Gioco da aggiungere non è stato trovato"})
         if(usertoaddgame.Giochi.length>0){ //check che utente non abbia già il gioco
             let check=usertoaddgame.Giochi.includes(gametoadd.id)
@@ -38,7 +38,7 @@ router.patch('/addgamestouser/:userid',custommiddleware.Getsingleuser,async(req,
             return res.status(400).json({message:"L'utente possiede già il gioco"})
            }
            usertoaddgame.Giochi.push(gametoadd)
-           let updateduser=await usertoaddgame.save()
+           const updateduser=await usertoaddgame.save()
            //NOTA: CON MONGOOSE è POSSIBILE FARE GLI UPDATE SIA TRAMITE LE QUERY COME UPDATEONE, UPDATEMANY ECC SIA MODIFICANDO L'OGGETTO
            //RICEVUTO DA QUERY COME FIND PERCHè ESSE RESTITUISCONO DEI DOCUMENTI. QUANDO NOI CHIAMIAMO IL METODO SAVE
            //MONGOOSE FA QUERY DI UPDATE SUL DATABASE SALVANDO I DATI ECCO PERCHè RIGA SEGUENTE è COMMENTATA IDEM RIGA 49
@@ -49,7 +49,7 @@ router.patch('/addgamestouser/:userid',custommiddleware.Getsingleuser,async(req,
         }
        //const updateduser=await usersmodel.updateOne({_id:usertoaddgame._id},{$push:{Giochi:gametoadd}})
        usertoaddgame.Giochi.push(gametoadd)
-       let updateduser=await usertoaddgame.save()
+       const updateduser=await usertoaddgame.save()
        return res.status(200).json(mapper.MapUsertoUserDto(updateduser,true))
     } catch (error) {
         return res.status(500).json({message:error.message})
@@ -77,12 +77,12 @@ router.get('/getsingleuserwithgames/:userid',async(req,res)=>{
 })
 
 router.get('/getsingleuser/:userid',custommiddleware.Getsingleuser,async(req,res)=>{
-    let usertofind=await res.user
+    const usertofind=await res.user
     return res.status(200).json(mapper.MapUsertoUserDto(usertofind))
 })
 
 router.delete('/deleteuser/:userid',custommiddleware.Getsingleuser,async(req,res)=>{
-    let usertodelete=await res.user
+    const usertodelete=await res.user
     try {
         if(usertodelete.deleted) return res.status(404).json({message:`Utente con id ${req.params.userid} non trovato`})
         usertodelete.deleted=true

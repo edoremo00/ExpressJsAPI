@@ -5,7 +5,7 @@ const app=express()//rappresenta il mio server
 const mongoose=require('mongoose')//per connessione a mongodb
 
 
-mongoose.connect(process.env.CONNECTIONSTRING).catch(error=>console.error(`connessione database fallita, Errore: ${connerror}`))/*ritorna una promise.
+mongoose.connect(process.env.CONNECTIONSTRING).catch(error=>console.error(`connessione database fallita, Errore: ${error}`))/*ritorna una promise.
     eventi come connessione fallita li posso intercettare con il catch oppure aggiungere un listener
     a evento error come fatto qua sotto*/
 //mongoose.connection rappresenta nostra connessione a database

@@ -82,7 +82,10 @@ const getsingleGamemiddlewarewithparams=(finddeleted)=>{
 
 //module.exports.getsingleGamemiddlewarewithparams=getsingleGamemiddlewarewithparams
 //#endregion
-module.exports.getsingleGamemiddlewarewithparams=getsingleGamemiddlewarewithparams
-module.exports.getsingleGamemiddleware=getsingleGamemiddleware
-module.exports.Getsingleuser=Getsingleuser
+module.exports={
+    getsingleGamemiddleware,
+    getsingleGamemiddlewarewithparams,
+    Getsingleuser
+}
+
 
